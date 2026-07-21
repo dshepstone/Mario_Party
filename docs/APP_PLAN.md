@@ -10,7 +10,7 @@ Create a quick, welcoming party game in which a player spins a wheel and receive
 2. Start a spin from a large button or keyboard control.
 3. Select outcomes fairly and prevent additional input during a spin.
 4. Announce the result visually and through an accessible live region.
-5. Allow a host to add, edit, remove, and recolour wheel entries.
+5. Allow a host to add and remove 5–30 wheel entries from a collapsible drawer, with editing and recolouring to follow.
 6. Save the current wheel locally in the browser.
 7. Offer reset, reduced-motion, and sound controls.
 
@@ -29,7 +29,7 @@ App
     └── GameSettings
 ```
 
-The starter implements `GameHeader`, `SpinWheel`, `ResultBanner`, and `WheelControls`. Editing and settings are planned next.
+The starter implements `GameHeader`, `SpinWheel`, `ResultBanner`, `WheelControls`, and the collapsible `EntryDrawer`. Inline editing and settings are planned next.
 
 ## State model
 

@@ -49,10 +49,11 @@ export function SpinWheel({ entries, rotation, isSpinning, onTransitionEnd }: Sp
               <path d={describeSegment(startAngle, endAngle)} fill={entry.color} />
               <text
                 className="wheel-label"
-                x={CENTER}
-                y="42"
-                textAnchor="middle"
-                transform={`rotate(${labelAngle} ${CENTER} ${CENTER})`}
+                x={CENTER + 48}
+                y={CENTER + 4}
+                textAnchor="start"
+                transform={`rotate(${labelAngle - 90} ${CENTER} ${CENTER})`}
+                style={{ fontSize: entries.length > 20 ? '9px' : entries.length > 12 ? '10px' : '12px' }}
               >
                 {entry.label}
               </text>
