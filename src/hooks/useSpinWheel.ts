@@ -15,7 +15,7 @@ export function useSpinWheel(entries: WheelEntry[]) {
   const pendingResult = useRef<WheelEntry | null>(null)
 
   const spin = (): SpinMotion | null => {
-    if (status === 'spinning' || entries.length < 2) return null
+    if (status === 'spinning' || entries.length < 5) return null
 
     const selectedIndex = Math.floor(Math.random() * entries.length)
     const segmentAngle = FULL_TURN / entries.length
@@ -38,5 +38,11 @@ export function useSpinWheel(entries: WheelEntry[]) {
     setStatus('complete')
   }
 
-  return { status, rotation, selectedEntry, spin, finishSpin }
+  const clearSelection = () => {
+    pendingResult.current = null
+    setSelectedEntry(null)
+    setStatus('idle')
+  }
+
+  return { status, rotation, selectedEntry, spin, finishSpin, clearSelection }
 }

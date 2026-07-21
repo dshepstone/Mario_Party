@@ -38,7 +38,7 @@ export function SpinWheel({
 
   return (
     <div className="wheel-shell">
-      <div className="wheel-pointer" aria-hidden="true" />
+      {entries.length > 0 && <div className="wheel-pointer" aria-hidden="true" />}
       <svg
         className={`wheel ${isSpinning ? 'wheel--spinning' : ''}`}
         style={{ transform: `rotate(${rotation}deg)` }}
@@ -47,6 +47,13 @@ export function SpinWheel({
         role="img"
         aria-label={`Spin wheel with ${entries.length} choices`}
       >
+        {entries.length === 0 && (
+          <>
+            <circle cx={CENTER} cy={CENTER} r={RADIUS} className="wheel-empty" />
+            <text x={CENTER} y={CENTER - 8} className="wheel-empty-title" textAnchor="middle">Your wheel is empty</text>
+            <text x={CENTER} y={CENTER + 18} className="wheel-empty-copy" textAnchor="middle">Add or import names</text>
+          </>
+        )}
         {entries.map((entry, index) => {
           const startAngle = index * segmentAngle
           const endAngle = startAngle + segmentAngle
@@ -67,7 +74,7 @@ export function SpinWheel({
             </g>
           )
         })}
-        <circle cx={CENTER} cy={CENTER} r="36" className="wheel-hub" />
+        {entries.length > 0 && <circle cx={CENTER} cy={CENTER} r="36" className="wheel-hub" />}
       </svg>
     </div>
   )

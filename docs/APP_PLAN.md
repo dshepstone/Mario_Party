@@ -10,8 +10,8 @@ Create a quick, welcoming party game in which a player spins a wheel and receive
 2. Start a spin from a large button or keyboard control.
 3. Select outcomes fairly and prevent additional input during a spin.
 4. Announce the result visually and through an accessible live region.
-5. Allow a host to add and remove 5–30 wheel entries from a collapsible drawer, with editing and recolouring to follow.
-6. Save the current wheel locally in the browser.
+5. Allow a host to build or clear a 0–30 entry list in a collapsible drawer; require five entries only when spinning.
+6. Import and export reusable name lists as JSON files, with browser storage to follow.
 7. Offer reset, reduced-motion, and sound controls.
 
 ## Component structure

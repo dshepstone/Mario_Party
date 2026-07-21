@@ -50,6 +50,9 @@ input { font: inherit; }
 .wheel-segment--selected .wheel-label { fill: #fff; font-weight: 950; stroke: #180f35; stroke-width: 4px; }
 .wheel-label { fill: white; font-weight: 800; paint-order: stroke; stroke: rgba(24,15,53,0.5); stroke-width: 3px; }
 .wheel-hub { fill: #f8fafc; stroke: #180f35; stroke-width: 8; }
+.wheel-empty { fill: rgba(255,255,255,0.06); stroke: rgba(255,255,255,0.28); stroke-width: 3; stroke-dasharray: 8 8; }
+.wheel-empty-title { fill: #f8fafc; font-size: 20px; font-weight: 900; }
+.wheel-empty-copy { fill: #c4b5fd; font-size: 13px; }
 .wheel-pointer {
   position: absolute; z-index: 2; top: 0; left: 50%; width: 0; height: 0;
   border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 42px solid #f8fafc;
@@ -87,6 +90,12 @@ input { font: inherit; }
 .name-form button { border: 0; border-radius: 0.65rem; padding: 0.7rem 0.9rem; color: #180f35; background: #fef08a; cursor: pointer; font-weight: 900; }
 .name-form button:disabled { opacity: 0.45; cursor: not-allowed; }
 .entry-count { display: flex; justify-content: space-between; min-height: 1rem; margin-top: 0.45rem; color: #a78bfa; font-size: 0.72rem; }
+.file-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.45rem; margin-top: 1rem; }
+.file-actions button { border: 1px solid rgba(255,255,255,0.16); border-radius: 0.6rem; padding: 0.6rem 0.4rem; color: #e9d5ff; background: rgba(255,255,255,0.07); cursor: pointer; font-size: 0.76rem; font-weight: 800; }
+.file-actions button:hover:not(:disabled) { background: rgba(255,255,255,0.13); }
+.file-actions .clear-list { grid-column: 1 / -1; color: #fecdd3; border-color: rgba(251,113,133,0.26); }
+.file-actions button:disabled { opacity: 0.35; cursor: not-allowed; }
+.file-message { margin: 0.6rem 0 0; color: #c4b5fd; font-size: 0.75rem; line-height: 1.35; }
 .name-list { display: grid; gap: 0.45rem; margin: 1.1rem 0 0; padding: 0; list-style: none; counter-reset: none; }
 .name-list li { display: flex; align-items: center; gap: 0.55rem; min-height: 42px; padding: 0.45rem 0.5rem; border: 1px solid rgba(255,255,255,0.09); border-radius: 0.7rem; background: rgba(255,255,255,0.05); }
 .entry-number { width: 1.25rem; color: #8b7da9; font-size: 0.72rem; text-align: right; }

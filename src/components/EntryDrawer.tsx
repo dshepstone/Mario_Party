@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
 import type { WheelEntry } from '../types/wheel'
 
 interface EntryDrawerProps {
@@ -8,6 +8,9 @@ interface EntryDrawerProps {
   onToggle: () => void
   onAdd: (name: string) => void
   onRemove: (id: string) => void
+  onClear: () => void
+  onImport: (names: string[]) => void
+  onExport: () => void
 }
 
 export function EntryDrawer({
@@ -17,10 +20,14 @@ export function EntryDrawer({
   onToggle,
   onAdd,
   onRemove,
+  onClear,
+  onImport,
+  onExport,
 }: EntryDrawerProps) {
   const [name, setName] = useState('')
+  const [fileMessage, setFileMessage] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const isAtMaximum = entries.length >= 30
-  const isAtMinimum = entries.length <= 5
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -28,6 +35,34 @@ export function EntryDrawer({
     if (!trimmedName || isAtMaximum || isSpinning) return
     onAdd(trimmedName)
     setName('')
+  }
+
+  const handleImport = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+
+    try {
+      const parsed: unknown = JSON.parse(await file.text())
+      const rawNames = Array.isArray(parsed)
+        ? parsed
+        : typeof parsed === 'object' && parsed !== null && 'names' in parsed
+          ? (parsed as { names: unknown }).names
+          : null
+
+      if (!Array.isArray(rawNames) || !rawNames.every((item) => typeof item === 'string')) {
+        throw new Error('Choose a wheel JSON file containing a names list.')
+      }
+
+      const importedNames = rawNames.map((item) => item.trim()).filter(Boolean)
+      if (importedNames.length > 30) throw new Error('A wheel can contain no more than 30 names.')
+      if (importedNames.some((item) => item.length > 28)) throw new Error('Each imported name must be 28 characters or fewer.')
+
+      onImport(importedNames)
+      setFileMessage(`Imported ${importedNames.length} ${importedNames.length === 1 ? 'name' : 'names'}.`)
+    } catch (error) {
+      setFileMessage(error instanceof Error ? error.message : 'The JSON file could not be imported.')
+    }
   }
 
   return (
@@ -47,7 +82,7 @@ export function EntryDrawer({
         <div className="drawer-heading">
           <p className="eyebrow">Customize</p>
           <h2>Wheel names</h2>
-          <p>Add between 5 and 30 names, activities, or prizes.</p>
+          <p>Create a list of up to 30 names. Add at least five when you are ready to spin.</p>
         </div>
 
         <form className="name-form" onSubmit={handleSubmit}>
@@ -72,6 +107,21 @@ export function EntryDrawer({
           </div>
         </form>
 
+        <div className="file-actions" aria-label="Save and load wheel names">
+          <button type="button" onClick={onExport} disabled={entries.length === 0 || isSpinning}>Export JSON</button>
+          <button type="button" onClick={() => fileInputRef.current?.click()} disabled={isSpinning}>Import JSON</button>
+          <button type="button" className="clear-list" onClick={onClear} disabled={entries.length === 0 || isSpinning}>Clear all</button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            onChange={handleImport}
+            className="sr-only"
+            tabIndex={-1}
+          />
+        </div>
+        {fileMessage && <p className="file-message" role="status">{fileMessage}</p>}
+
         <ol className="name-list">
           {entries.map((entry, index) => (
             <li key={entry.id}>
@@ -82,9 +132,9 @@ export function EntryDrawer({
                 type="button"
                 className="remove-entry"
                 onClick={() => onRemove(entry.id)}
-                disabled={isAtMinimum || isSpinning}
+                disabled={isSpinning}
                 aria-label={`Remove ${entry.label}`}
-                title={isAtMinimum ? 'The wheel needs at least 5 names' : `Remove ${entry.label}`}
+                title={`Remove ${entry.label}`}
               >
                 ×
               </button>
@@ -92,7 +142,7 @@ export function EntryDrawer({
           ))}
         </ol>
 
-        {isAtMinimum && <p className="drawer-note">Five names are required to play.</p>}
+        {entries.length < 5 && <p className="drawer-note">Add {5 - entries.length} more {5 - entries.length === 1 ? 'name' : 'names'} to enable spinning.</p>}
       </div>
     </aside>
   )

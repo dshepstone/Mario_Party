@@ -11,7 +11,7 @@ import { useWheelAudio } from './hooks/useWheelAudio'
 function App() {
   const [entries, setEntries] = useState(defaultEntries)
   const [isDrawerOpen, setIsDrawerOpen] = useState(true)
-  const { status, rotation, selectedEntry, spin, finishSpin } = useSpinWheel(entries)
+  const { status, rotation, selectedEntry, spin, finishSpin, clearSelection } = useSpinWheel(entries)
   const { primeAudio, scheduleSpinClicks } = useWheelAudio()
   const isSpinning = status === 'spinning'
 
@@ -35,7 +35,33 @@ function App() {
   }
 
   const removeEntry = (id: string) => {
-    setEntries((current) => current.length > 5 ? current.filter((entry) => entry.id !== id) : current)
+    clearSelection()
+    setEntries((current) => current.filter((entry) => entry.id !== id))
+  }
+
+  const importEntries = (names: string[]) => {
+    const palette = ['#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6']
+    clearSelection()
+    setEntries(names.map((label, index) => ({
+      id: `imported-${Date.now()}-${index}`,
+      label,
+      color: palette[index % palette.length],
+    })))
+  }
+
+  const clearEntries = () => {
+    clearSelection()
+    setEntries([])
+  }
+
+  const exportEntries = () => {
+    const contents = JSON.stringify({ version: 1, names: entries.map((entry) => entry.label) }, null, 2)
+    const url = URL.createObjectURL(new Blob([contents], { type: 'application/json' }))
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'party-wheel-names.json'
+    link.click()
+    window.setTimeout(() => URL.revokeObjectURL(url), 0)
   }
 
   return (
@@ -47,6 +73,9 @@ function App() {
         onToggle={() => setIsDrawerOpen((open) => !open)}
         onAdd={addEntry}
         onRemove={removeEntry}
+        onClear={clearEntries}
+        onImport={importEntries}
+        onExport={exportEntries}
       />
       <main className="app-shell">
         <GameHeader />
@@ -60,7 +89,7 @@ function App() {
           />
           <div className="game-panel">
             <ResultBanner result={selectedEntry} isSpinning={isSpinning} />
-            <WheelControls isSpinning={isSpinning} onSpin={startSpin} />
+            <WheelControls isSpinning={isSpinning} canSpin={entries.length >= 5} onSpin={startSpin} />
             <div className="wheel-summary">
               <strong>{entries.length} names</strong>
               <span>Use the names drawer to customize the wheel.</span>
