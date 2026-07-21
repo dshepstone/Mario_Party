@@ -6,12 +6,19 @@ import { SpinWheel } from './components/SpinWheel'
 import { WheelControls } from './components/WheelControls'
 import { defaultEntries } from './data/defaultEntries'
 import { useSpinWheel } from './hooks/useSpinWheel'
+import { useWheelAudio } from './hooks/useWheelAudio'
 
 function App() {
   const [entries, setEntries] = useState(defaultEntries)
   const [isDrawerOpen, setIsDrawerOpen] = useState(true)
   const { status, rotation, selectedEntry, spin, finishSpin } = useSpinWheel(entries)
+  const { primeAudio, playClick } = useWheelAudio()
   const isSpinning = status === 'spinning'
+
+  const startSpin = () => {
+    primeAudio()
+    spin()
+  }
 
   const addEntry = (label: string) => {
     if (entries.length >= 30) return
@@ -47,11 +54,13 @@ function App() {
             entries={entries}
             rotation={rotation}
             isSpinning={isSpinning}
+            selectedEntryId={selectedEntry?.id ?? null}
+            onSegmentPass={playClick}
             onTransitionEnd={finishSpin}
           />
           <div className="game-panel">
             <ResultBanner result={selectedEntry} isSpinning={isSpinning} />
-            <WheelControls isSpinning={isSpinning} onSpin={spin} />
+            <WheelControls isSpinning={isSpinning} onSpin={startSpin} />
             <div className="wheel-summary">
               <strong>{entries.length} names</strong>
               <span>Use the names drawer to customize the wheel.</span>

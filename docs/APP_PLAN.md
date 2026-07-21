@@ -48,6 +48,7 @@ Spin selection and animation should remain separate: choose an unbiased entry fi
 - React/Vite/TypeScript setup
 - Responsive SVG wheel
 - Spin lifecycle and result announcement
+- Segment click audio and selected-wedge highlight
 - Keyboard and reduced-motion basics
 
 ### Milestone 2 — Host controls

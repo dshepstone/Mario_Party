@@ -45,6 +45,9 @@ input { font: inherit; }
 .wheel-shell { position: relative; width: min(100%, 560px); margin: auto; padding: 5%; }
 .wheel { display: block; width: 100%; filter: drop-shadow(0 18px 24px rgba(0,0,0,0.36)); transition: transform 4.2s cubic-bezier(.12,.66,.08,1); }
 .wheel path { stroke: rgba(255,255,255,0.7); stroke-width: 2; }
+.wheel-segment path { transition: filter 180ms ease, stroke 180ms ease, stroke-width 180ms ease; }
+.wheel-segment--selected path { filter: brightness(1.35) saturate(1.18) drop-shadow(0 0 9px rgba(255,255,255,0.95)); stroke: #fff; stroke-width: 6; }
+.wheel-segment--selected .wheel-label { fill: #fff; font-weight: 950; stroke: #180f35; stroke-width: 4px; }
 .wheel-label { fill: white; font-weight: 800; paint-order: stroke; stroke: rgba(24,15,53,0.5); stroke-width: 3px; }
 .wheel-hub { fill: #f8fafc; stroke: #180f35; stroke-width: 8; }
 .wheel-pointer {
