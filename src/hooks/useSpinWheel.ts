@@ -3,14 +3,19 @@ import type { SpinStatus, WheelEntry } from '../types/wheel'
 
 const FULL_TURN = 360
 
+export interface SpinMotion {
+  startRotation: number
+  endRotation: number
+}
+
 export function useSpinWheel(entries: WheelEntry[]) {
   const [status, setStatus] = useState<SpinStatus>('idle')
   const [rotation, setRotation] = useState(0)
   const [selectedEntry, setSelectedEntry] = useState<WheelEntry | null>(null)
   const pendingResult = useRef<WheelEntry | null>(null)
 
-  const spin = () => {
-    if (status === 'spinning' || entries.length < 2) return
+  const spin = (): SpinMotion | null => {
+    if (status === 'spinning' || entries.length < 2) return null
 
     const selectedIndex = Math.floor(Math.random() * entries.length)
     const segmentAngle = FULL_TURN / entries.length
@@ -22,7 +27,9 @@ export function useSpinWheel(entries: WheelEntry[]) {
     pendingResult.current = entries[selectedIndex]
     setSelectedEntry(null)
     setStatus('spinning')
-    setRotation((current) => current + extraTurns * FULL_TURN + alignment)
+    const endRotation = rotation + extraTurns * FULL_TURN + alignment
+    setRotation(endRotation)
+    return { startRotation: rotation, endRotation }
   }
 
   const finishSpin = () => {

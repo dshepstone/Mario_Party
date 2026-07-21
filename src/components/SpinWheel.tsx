@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import type { WheelEntry } from '../types/wheel'
 
 interface SpinWheelProps {
@@ -6,7 +5,6 @@ interface SpinWheelProps {
   rotation: number
   isSpinning: boolean
   selectedEntryId: string | null
-  onSegmentPass: () => void
   onTransitionEnd: () => void
 }
 
@@ -34,45 +32,14 @@ export function SpinWheel({
   rotation,
   isSpinning,
   selectedEntryId,
-  onSegmentPass,
   onTransitionEnd,
 }: SpinWheelProps) {
   const segmentAngle = 360 / entries.length
-  const wheelRef = useRef<SVGSVGElement>(null)
-  const previousSegment = useRef<number | null>(null)
-
-  useEffect(() => {
-    if (!isSpinning) {
-      previousSegment.current = null
-      return
-    }
-
-    let animationFrame = 0
-    const trackSegment = () => {
-      const wheel = wheelRef.current
-      if (!wheel) return
-
-      const matrix = new DOMMatrixReadOnly(getComputedStyle(wheel).transform)
-      const angle = (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI
-      const normalizedAngle = (angle + 360) % 360
-      const currentSegment = Math.floor(normalizedAngle / segmentAngle)
-
-      if (previousSegment.current !== null && currentSegment !== previousSegment.current) {
-        onSegmentPass()
-      }
-      previousSegment.current = currentSegment
-      animationFrame = requestAnimationFrame(trackSegment)
-    }
-
-    animationFrame = requestAnimationFrame(trackSegment)
-    return () => cancelAnimationFrame(animationFrame)
-  }, [isSpinning, onSegmentPass, segmentAngle])
 
   return (
     <div className="wheel-shell">
       <div className="wheel-pointer" aria-hidden="true" />
       <svg
-        ref={wheelRef}
         className={`wheel ${isSpinning ? 'wheel--spinning' : ''}`}
         style={{ transform: `rotate(${rotation}deg)` }}
         onTransitionEnd={onTransitionEnd}

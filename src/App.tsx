@@ -12,12 +12,13 @@ function App() {
   const [entries, setEntries] = useState(defaultEntries)
   const [isDrawerOpen, setIsDrawerOpen] = useState(true)
   const { status, rotation, selectedEntry, spin, finishSpin } = useSpinWheel(entries)
-  const { primeAudio, playClick } = useWheelAudio()
+  const { primeAudio, scheduleSpinClicks } = useWheelAudio()
   const isSpinning = status === 'spinning'
 
   const startSpin = () => {
     primeAudio()
-    spin()
+    const motion = spin()
+    if (motion) scheduleSpinClicks(motion.startRotation, motion.endRotation, entries.length)
   }
 
   const addEntry = (label: string) => {
@@ -55,7 +56,6 @@ function App() {
             rotation={rotation}
             isSpinning={isSpinning}
             selectedEntryId={selectedEntry?.id ?? null}
-            onSegmentPass={playClick}
             onTransitionEnd={finishSpin}
           />
           <div className="game-panel">
