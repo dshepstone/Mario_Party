@@ -13,6 +13,7 @@ Create a quick, welcoming party game in which a player spins a wheel and receive
 5. Allow a host to build or clear a 0–30 entry list in a collapsible drawer; require five entries only when spinning.
 6. Import and export reusable name lists as JSON files, with browser storage to follow.
 7. Offer reset, reduced-motion, and sound controls.
+8. Sort each selected entry onto Winner or Lost boards and compare the final board totals at the end of a round.
 
 ## Component structure
 
